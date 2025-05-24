@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { getPrayerTimes, getRandomSurah, getAllCities, getRandomHadith } from './api'
 import CitySelector from './components/CitySelector'
 import PrayerCountdown from './components/PrayerCountdown'
@@ -75,6 +75,11 @@ function App() {
   const [hadith, setHadith] = useState<HadithData | null>(null)
   const [refreshingHadith, setRefreshingHadith] = useState(false)
   const [activeView, setActiveView] = useState<ActiveView>('prayer');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [cities, setCities] = useState<City[]>([]);
+  const [filteredCities, setFilteredCities] = useState<City[]>([]);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   // Modifikasi useEffect untuk memuat dua ayat
   useEffect(() => {
@@ -94,7 +99,47 @@ function App() {
     loadSavedCity();
   }, []);
 
+  // Load cities on mount
+  useEffect(() => {
+    const loadCities = async () => {
+      try {
+        const citiesData = await getAllCities();
+        setCities(citiesData);
+      } catch (err) {
+        console.error('Error loading cities:', err);
+      }
+    };
+    loadCities();
+  }, []);
+
+  // Filter cities when search term changes
+  useEffect(() => {
+    if (searchTerm) {
+      const filtered = cities.filter(city =>
+        city.lokasi.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredCities(filtered);
+    } else {
+      setFilteredCities([]);
+    }
+  }, [searchTerm, cities]);
+
+  // Handle click outside search dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearching(false);
+        setSearchTerm('');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleCitySelect = async (city: City, shouldSave: boolean = true) => {
+    setIsSearching(false);
+    setSearchTerm('');
     try {
       setLoading(true)
       setError(null)
@@ -143,13 +188,7 @@ function App() {
   }
 
   const handleChangeCity = () => {
-    localStorage.removeItem('selectedCity'); // Hapus data kota dari localStorage
-    setSelectedCity(null);
-    setPrayerTimes(null);
-    setQuranVerse(null);
-    setQuranVerse2(null);
-    setHadith(null);
-    setError(null);
+    setIsSearching(true);
   }
 
   const handleRefreshVerse = async () => {
@@ -306,7 +345,37 @@ function App() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <p className="text-lg text-gray-100">{selectedCity.lokasi}</p>
+                {isSearching ? (
+                  <div ref={searchRef} className="relative">
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder="Cari kota..."
+                      className="min-w-[200px] sm:min-w-[300px] px-3 py-1.5 bg-gray-800/50 text-gray-100 rounded-lg border border-gray-600 focus:border-purple-500 focus:outline-none placeholder-gray-400"
+                      autoFocus
+                    />
+                    {filteredCities.length > 0 && (
+                      <div className="absolute z-50 min-w-[250px] sm:min-w-[350px] mt-2 max-h-[300px] overflow-y-auto bg-gray-800/95 backdrop-blur-xl rounded-xl border border-gray-700 shadow-xl custom-scrollbar">
+                        {filteredCities.map((city) => (
+                          <button
+                            key={city.id}
+                            onClick={() => handleCitySelect(city)}
+                            className="w-full px-4 py-2.5 text-left text-gray-100 hover:bg-gray-700/50 transition-colors flex items-center space-x-2 cursor-pointer border-b border-gray-700/30 last:border-b-0"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-purple-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span className="truncate hover:text-purple-400 transition-colors">{city.lokasi}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-lg text-gray-100">{selectedCity?.lokasi}</p>
+                )}
               </div>
               <div className="w-px h-6 bg-gray-600"></div>
               <div className="flex items-center space-x-2">
@@ -326,44 +395,44 @@ function App() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-                <span>Ganti Kota</span>
+                <span>{isSearching ? 'Tutup Pencarian' : 'Ganti Kota'}</span>
               </button>
             </div>
 
             {/* View Selection Button Group */}
-            <div className="flex justify-center space-x-2 mb-8">
+            <div className="grid grid-cols-1 sm:flex sm:justify-center gap-2 sm:space-x-2 mb-8 px-4 sm:px-0">
               <button
                 onClick={() => setActiveView('prayer')}
-                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2
+                className={`px-4 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center justify-center space-x-2 text-sm sm:text-base
                   ${activeView === 'prayer' 
                     ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/30' 
                     : 'bg-gray-800/40 text-gray-300 hover:bg-gray-700/40'}`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>Jadwal Sholat</span>
               </button>
               <button
                 onClick={() => setActiveView('quran')}
-                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2
+                className={`px-4 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center justify-center space-x-2 text-sm sm:text-base
                   ${activeView === 'quran' 
                     ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/30' 
                     : 'bg-gray-800/40 text-gray-300 hover:bg-gray-700/40'}`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 <span>Ayat Al-Quran</span>
               </button>
               <button
                 onClick={() => setActiveView('hadith')}
-                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2
+                className={`px-4 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center justify-center space-x-2 text-sm sm:text-base
                   ${activeView === 'hadith' 
                     ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/30' 
                     : 'bg-gray-800/40 text-gray-300 hover:bg-gray-700/40'}`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
                 <span>Hadist</span>
