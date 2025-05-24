@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.7);
+}
+
+/* Font untuk teks Arab */
+.font-arabic {
+  font-family: "Traditional Arabic", "Amiri", serif;
+}
+
+@layer base {
+  body {
+    font-family: 'Poppins', sans-serif;
+    @apply bg-gradient-to-br from-dark-50 to-dark-100 min-h-screen text-gray-100;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-dark-200/70 backdrop-blur-sm rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 border border-dark-300;
+  }
+  
+  .card-title {
+    @apply text-2xl font-semibold text-gray-100 mb-6 flex items-center gap-3;
+  }
+  
+  .card-title .icon {
+    @apply flex-shrink-0;
+  }
+  
+  .card-title span {
+    @apply flex-grow;
+  }
+  
+  .prayer-time-item {
+    @apply bg-dark-300/50 rounded-2xl p-4 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-dark-400/50;
+  }
+
+  .icon {
+    @apply text-purple-400;
+  }
+
+  .highlight {
+    @apply text-purple-400;
+  }
+
+  .glass-pill {
+    @apply bg-dark-200/50 backdrop-blur-sm px-6 py-2 rounded-full shadow-sm border border-dark-300/50;
+  }
+
+  /* Button Group Styles */
+  .button-group {
+    @apply flex justify-center space-x-2 mb-8;
+  }
+
+  .button-group-item {
+    @apply px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2;
+  }
+
+  .button-group-item-active {
+    @apply bg-purple-500 text-white shadow-lg shadow-purple-500/30;
+  }
+
+  .button-group-item-inactive {
+    @apply bg-gray-800/40 text-gray-300 hover:bg-gray-700/40;
+  }
+
+  /* Card Transitions */
+  .card-enter {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .card-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 300ms, transform 300ms;
+  }
+
+  .card-exit {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card-exit-active {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 300ms, transform 300ms;
+  }
+} 
