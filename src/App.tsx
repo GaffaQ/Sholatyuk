@@ -293,11 +293,11 @@ function App() {
               <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-white via-blue-400 to-purple-500 text-transparent bg-clip-text mb-6 tracking-tight">
+            <h1 className="text-4xl mt-8 md:text-6xl font-bold bg-gradient-to-r from-white via-blue-400 to-purple-500 text-transparent bg-clip-text mb-6 tracking-tight">
               Sholatyuk
             </h1>
             
-            <p className="text-gray-400 mb-8">Temukan waktu sholat tepat untuk daerahmu</p>
+            <p className="text-gray-400 mb-8">Temukan waktu sholat untuk daerahmu!</p>
             
             {/* Location and Date info in one line */}
             <div className="glass-pill mb-6 inline-flex items-center justify-center space-x-4 bg-gray-700/30 backdrop-blur-2xl py-3 px-4 rounded-2xl sm:shadow-2xl hover:-translate-y-1 transition border border-gray-600 hover:border-blue-400">
