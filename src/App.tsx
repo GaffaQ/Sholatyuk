@@ -333,7 +333,7 @@ function App() {
             </div>
             
             <h1 className="text-4xl mt-8 md:text-6xl font-bold bg-gradient-to-r from-white via-blue-400 to-purple-500 text-transparent bg-clip-text mb-6 tracking-tight">
-              Sholatyuk
+              Sholat<span className="text-yellow-500">bro</span>
             </h1>
             
             <p className="text-gray-400 mb-8">Temukan waktu sholat untuk daerahmu!</p>
