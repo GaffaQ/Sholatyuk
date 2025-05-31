@@ -1,7 +1,8 @@
 # 🕌 Sholatyuk - Jadwal Sholat Digital
 
 <div align="center">
-  <img src="./public/preview.png" alt="Sholatyuk Preview" width="100%">
+  <!--<img src="./public/preview.png" alt="Sholatyuk Preview" width="100%">-->
+  [DEMO](https://sholatbro.vercel.app)
   
   [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -78,7 +79,7 @@ Proyek ini dilisensikan di bawah [MIT License](LICENSE)
 
 ## 👨‍💻 Dibuat Oleh
 
-- [@Gaptixa](https://github.com/Gaptixa)
+- Github: [@GaffaQ](https://github.com/GaffaQ)
 - Instagram: [@gaffaaq](https://instagram.com/gaffaaq)
 
 ## 📦 Dependencies
