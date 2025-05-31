@@ -2,7 +2,6 @@
 
 <div align="center">
   <!--<img src="./public/preview.png" alt="Sholatyuk Preview" width="100%">-->
-  [Demo](https://sholatbro.vercel.app)
   
   [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -40,6 +39,8 @@ Sholatyuk adalah aplikasi web modern yang dirancang untuk membantu umat Muslim d
 - **API Integration**: Fetch API untuk mengambil data dari backend
 - **Audio**: Web Audio API untuk fitur adzan
 - **Storage**: Local Storage untuk menyimpan preferensi pengguna
+
+# [Demo](https://sholatbro.vercel.app)
 
 ## 🛠️ API yang Digunakan
 
