@@ -11,6 +11,7 @@
 ## 📖 Tentang Aplikasi
 
 Sholatyuk adalah aplikasi web modern yang dirancang untuk membantu umat Muslim di Indonesia mengetahui waktu sholat dengan akurat. Aplikasi ini tidak hanya menampilkan jadwal sholat, tetapi juga dilengkapi dengan fitur-fitur inspiratif seperti ayat Al-Quran dan Hadits yang ditampilkan secara acak.
+> [Demo](https://sholatbro.vercel.app)
 
 ### ✨ Fitur Utama
 
@@ -39,8 +40,6 @@ Sholatyuk adalah aplikasi web modern yang dirancang untuk membantu umat Muslim d
 - **API Integration**: Fetch API untuk mengambil data dari backend
 - **Audio**: Web Audio API untuk fitur adzan
 - **Storage**: Local Storage untuk menyimpan preferensi pengguna
-
-# [Demo](https://sholatbro.vercel.app)
 
 ## 🛠️ API yang Digunakan
 
